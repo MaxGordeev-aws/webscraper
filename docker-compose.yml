@@ -1,0 +1,67 @@
+version: "3.2"
+services:
+  scraper:
+    build: 
+      context: .
+    image: maxgordeev88/scraper
+    container_name: scraper
+    ports:
+      - "5000:5000"
+    networks:
+      - backend
+    command: ["wait-for-it", "mysql:3306", "--timeout=240","--","scrapy", "crawl", "quotes"]
+
+  nodejs:
+    build: 
+      context: .
+    image: maxgordeev88/nodejs-mysql-app
+    networks:
+      - frontend
+      - backend
+    environment:
+      - MYSQL_HOST=mysql-app
+      - MYSQL_USER=user
+      - MYSQL_PASS=pass
+      - MYSQL_DB=my_db
+    volumes:
+      - ./www/:/var/www/html/
+    ports:
+      - "30001:8005"
+    container_name: nodejs-app
+
+  mysql:
+    image: mysql
+    networks:
+      - backend
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=pass 
+      - MYSQL_DATABASE=my_db
+    container_name: mysql-app
+    command: ["--init-file=/tmp/mysql-init.sql", "--default-authentication-plugin=mysql_native_password"]
+    volumes:
+      - ./db_dir:/var/lib/mysql
+      - ./mysql-init.sql:/tmp/mysql-init.sql
+    ports:
+      - "3306:3306"
+    expose:
+      - 3306  
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.7
+    depends_on:
+      - mysql
+    networks:
+      - backend
+    ports:
+      - "30002:80"
+    environment:
+      - PMA_HOST=mysql-app
+      - PMA_PORT= 3306
+    volumes:
+      - /sessions
+    container_name: phpmyadmin-app
+networks:
+  frontend:
+  backend:
