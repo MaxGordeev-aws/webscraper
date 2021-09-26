@@ -24,7 +24,7 @@ services:
     command: ["--init-file=/tmp/mysql-init.sql", "--default-authentication-plugin=mysql_native_password"]
     volumes:
       - ./scraper/db_dir:/var/lib/mysql
-      - ./scraper/mysql-init.sql:/tmp/mysql-init.sql
+      - ./mysql-init.sql:/tmp/mysql-init.sql
     ports:
       - "3306:3306"
     expose:
