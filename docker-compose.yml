@@ -11,24 +11,6 @@ services:
       - backend
     command: ["wait-for-it", "mysql:3306", "--timeout=240","--","scrapy", "crawl", "quotes"]
 
-  nodejs:
-    build: 
-      context: .
-    image: maxgordeev88/nodejs-mysql-app
-    networks:
-      - frontend
-      - backend
-    environment:
-      - MYSQL_HOST=mysql-app
-      - MYSQL_USER=user
-      - MYSQL_PASS=pass
-      - MYSQL_DB=my_db
-    volumes:
-      - ./www/:/var/www/html/
-    ports:
-      - "30001:8005"
-    container_name: nodejs-app
-
   mysql:
     image: mysql
     networks:
@@ -41,8 +23,8 @@ services:
     container_name: mysql-app
     command: ["--init-file=/tmp/mysql-init.sql", "--default-authentication-plugin=mysql_native_password"]
     volumes:
-      - ./db_dir:/var/lib/mysql
-      - ./mysql-init.sql:/tmp/mysql-init.sql
+      - ./scraper/db_dir:/var/lib/mysql
+      - ./scraper/mysql-init.sql:/tmp/mysql-init.sql
     ports:
       - "3306:3306"
     expose:
