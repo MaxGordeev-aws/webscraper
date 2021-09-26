@@ -1,8 +1,6 @@
 version: "3.2"
 services:
-  scraper:
-    build: 
-      context: .
+  scraper:  
     image: maxgordeev88/scraper
     container_name: scraper
     ports:
@@ -23,7 +21,6 @@ services:
     container_name: mysql-app
     command: ["--init-file=/tmp/mysql-init.sql", "--default-authentication-plugin=mysql_native_password"]
     volumes:
-      - ./scraper/db_dir:/var/lib/mysql
       - ./mysql-init.sql:/tmp/mysql-init.sql
     ports:
       - "3306:3306"
