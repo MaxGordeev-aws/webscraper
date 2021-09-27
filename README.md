@@ -21,13 +21,13 @@ Qwick - Sr.DevOps task
   User will need to config a Dynamic inventory: 
    - For the dynamic inventory, download ec2.py and ec2.ini from this given URL, and paste in the inventory folder:
                       
-                      https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory
+        https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory
 
    - Add this path in ansible.cfg    
    - After that, you also need to copy the key.pem for the ec2 instance launch.
    - After copying your key, make it executable by the following command:
                    
-                   chmod 600 Key_Name.pem  
+        chmod 600 Key_Name.pem  
 
    - You also need privilege escalation because in aws we have to configure all the configurations done by the user root only 
        (make sure to check and add if needed to absible.cfg).
@@ -44,7 +44,7 @@ Qwick - Sr.DevOps task
    - Save it.     
    After this make this file executable by the following command:
                   
-                  chmod +x ec2.py    
+        chmod +x ec2.py    
 
 6. Finally, run it and enjoy it. 
 
