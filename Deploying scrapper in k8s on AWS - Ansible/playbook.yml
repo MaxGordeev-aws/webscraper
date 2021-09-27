@@ -1,0 +1,88 @@
+- 
+  name: Play 1
+  hosts: localhost #replace with your host
+  tasks:
+      - name: Launching OS
+        ec2:
+          key_name: key   #your key
+          instance_type: t2.micro  #change per your need
+          image: xxxxx #replaced with preffered AMI
+          wait: yes
+          count: 1
+          instance_tags:
+            Name: k8s_minikube
+          vpc_subnet_id: subnet-c08fce8c #use subnet of your AWS VPC
+          assign_public_ip: yes
+          region: us-east-1 #here goes your re
+          state: present
+          group_id: sg-011aaeeafb6ee8fff #define your SG here
+
+-
+  name: Play 2
+  hosts: tag_Name_k8s_minikube #replace with your host
+  tasks:
+      - name: conf repo for kubectl
+        yum_repository:
+          name: Kubernetes
+          description: Kubectl
+          baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+          gpgcheck: yes
+          gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+          repo_gpgcheck: yes
+      - name: Installing kubectl
+        yum:
+          name: kubectl
+          state: present
+      - name: Installing Docker
+        yum:
+          name: docker
+          state: present
+      - name: Installing conntrack
+        yum:
+          name: conntrack
+          state: present
+      - name: Installing git
+        yum:
+          name: git
+          state: present
+          update_cache: yes
+      - name: Downloading minikube
+        get_url:
+          url: https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
+          dest: /root/minikube-latest.x86_64.rpm
+      - name: Installing minkube
+        yum:
+          name: /root/minikube-latest.x86_64.rpm
+          state: present
+      - name: Starting Minikube driver using none
+        command: minkube start --driver=none
+      - name: Clone a github repository
+        git:
+          repo: https://github.com/MaxGordeev-aws/webscraper.git
+          dest: /home/ec2-user/
+          clone: yes
+          update: yes
+
+- 
+
+  name: Play 3
+  hosts: tag_Name_k8s_minikube #replace with your host
+  tasks:
+      - name: Deploy Scraper-app
+        community.kubernetes.k8s:
+          state: present
+          src: ~/ec2-user/webscrapper/K8s/scraper-deploy.yml
+      - name: Deploy PHP
+        community.kubernetes.k8s:
+          state: present
+          src: ~/ec2-user/webscrapper/K8s/php-deploy.yml
+      - name: Create Mysql Secret
+        community.kubernetes.k8s:
+          state: present
+          src: ~/ec2-user/webscrapper/K8s/mysql-secret.yml      
+      - name: Deploy MySQL
+        community.kubernetes.k8s:
+          state: present
+          src: ~/ec2-user/webscrapper/K8s/mysql-deploy.yml
+                
+                    

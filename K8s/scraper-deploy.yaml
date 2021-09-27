@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scraper
+spec:
+  selector:
+    matchLabels:
+      run: scraper
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: scraper
+    spec:
+      containers:
+      - name: scraper
+        image: maxgordeev88/scraper
+        command: ["/bin/bash"]
+        args: ["wait-for-it", "mysql:3306", "--timeout=240","--","scrapy", "crawl", "quotes"]
+        ports:
+         - containerPort: 5000
+      restartPolicy: Always  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scraper
+spec:
+  type: ClusterIP
+  ports:
+  - port: 5000 
+    targetPort: 5000    
+  selector:
+    run: scraper

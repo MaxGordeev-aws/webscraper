@@ -1,9 +1,9 @@
 FROM mysql
 
-ENV MYSQL_ROOT_PASSWORD=root
-ENV MYSQL_USER=user
-ENV MYSQL_PASSWORD=pass 
-ENV MYSQL_DATABASE=my_db
+ENV MYSQL_ROOT_PASSWORD=root \
+    MYSQL_USER=user \
+    MYSQL_PASSWORD=pass \
+    MYSQL_DATABASE=my_db
 
 COPY mysql-init.sql /tmp/mysql-init.sql
 

@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      run: mysql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql
+        env:
+        - name: MYSQL_DATABASE
+          value: my_db     
+        - name: MYSQL_USER
+          value: user
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql_passwd
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql_root_passwd         
+        command: ["/bin/bash"]
+        args: ["--init-file=/tmp/mysql-init.sql", "--default-authentication-plugin=mysql_native_password"]
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - mountPath: "/tmp/"
+          name: mysql-claim
+      restartPolicy: Always
+      volumes:
+      - name: mysql-claim
+        persistentVolumeClaim:
+          claimName: mysql-claim  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+  - name: "3306"
+    port: 3306
+    targetPort: 3306   
+  selector:
+    run: mysql
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: mysql-sc
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: mysql-sc
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+mountOptions:
+  - debug
+volumeBindingMode: Immediate
+
+
+
+
+  

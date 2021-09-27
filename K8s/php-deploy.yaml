@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phpmyadmin
+spec:
+  selector:
+    matchLabels:
+      run: phpmyadmin
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: phpmyadmin
+    spec:
+      containers:
+      - name: phpmyadmin
+        image: phpmyadmin/phpmyadmin:4.7
+        env:
+        - name: PMA_HOST
+          value: mysql-app
+        - name: PMA_PORT
+          value: '3306'
+        ports:
+         - containerPort: 80
+        volumeMounts:
+        - mountPath: "/sessions"
+          name: phpmyadmin-claim 
+      restartPolicy: Always  
+      volumes:
+      - name: phpmyadmin-claim
+        persistentVolumeClaim:
+          claimName: phpmyadmin-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: phpmyadmin
+spec:
+  ports:
+  - name: "30002"
+    port: 30002
+    targetPort: 80    
+  selector:
+    run: phpmyadmin
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: phpmyadmin-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: phpmyadmin
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: phpmyadmin
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+mountOptions:
+  - debug
+volumeBindingMode: Immediate
