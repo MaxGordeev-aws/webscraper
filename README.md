@@ -5,7 +5,7 @@ Qwick - Sr.DevOps task
    Scrapy web scraper will pull info from quotes.toscrape.com and export that to MySql DB. 
    To start all containers and run the app with Docekr, use:
 
-        docker-compose up --build -d
+        docker-compose up -d
 
 2. MySql container will create a DB "quotes" once container is running and will wait for data export from a Scraper app. 
 3. PhpMyAdmin gives GUI over the webpage. The web GUI can be accesseble via: 
