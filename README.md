@@ -64,6 +64,12 @@ Qwick - Sr.DevOps task
    Instead of runnig MySql(or any other DB) in the container, which is not reliable for sensitive data, I would use AWS RDS or AWS Aurora, depends on needs and application, to provide more resilient, secure and scalable DB. 
 
 
+ P.S
+ Everything is above was tested on my prsonal K8s cluster on AWS that I manage. 
+ Thanks a lot,
+ Maxim Gordeev.   
+
+
 
    
 
