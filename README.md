@@ -50,7 +50,11 @@ Qwick - Sr.DevOps task
 
 
 7. Describe how you would test such an application: 
-   
+ 
+    There are 2 approaches to test that: 
+     1. Manual, check the results of DB creation, login to DB, visual inspection of data in the DB, K8s pods status check, etc. 
+     2. Automated:
+        By using a combination of Jenkins and Ansible. Jenkins will check the code from GitHub whenever there is a change and build the artifacts and run the test cases. And if test cases pass it will deploy it into the environment depending on the stage. And the process of deploying happens with the ansible, so basically Ansible just copies over the packages to the Nodes and then reloads applications. So it rereads new files and changes take effect.
   
 
 8. Describe potential flaws in the design and how you could fix them:
