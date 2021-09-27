@@ -49,10 +49,18 @@ Qwick - Sr.DevOps task
 6. Finally, run it and enjoy it. 
 
 
+7. Describe how you would test such an application: 
+   
+  
+
+8. Describe potential flaws in the design and how you could fix them:
+   Since I not a professional Python coder, some DB credentials in python code is exposed, need to learn deeper how to work with python env variables to hide them. 
+
+   Instead of runnig MySql(or any other DB) in the container, which is not reliable for sensitive data, I would use AWS RDS or AWS Aurora, depends on needs and application, to provide more resilient, secure and scalable DB. 
+
+
 
    
-
-
 
 
 
