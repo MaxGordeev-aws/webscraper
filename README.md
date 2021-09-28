@@ -65,7 +65,7 @@ Qwick - Sr.DevOps task
 
 
  P.S
- Everything is above was tested on my prsonal K8s cluster on AWS that I manage. 
+ Everything is above was tested on my personal K8s cluster on AWS that I manage. 
  Thanks a lot,
  Maxim Gordeev.   
 
