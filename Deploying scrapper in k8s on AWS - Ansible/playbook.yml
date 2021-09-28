@@ -1,6 +1,7 @@
 - 
   name: Play 1
   hosts: localhost #replace with your host
+  remote_user: root
   tasks:
       - name: Launching OS
         ec2:
@@ -20,6 +21,7 @@
 -
   name: Play 2
   hosts: tag_Name_k8s_minikube #replace with your host
+  remote_user: root
   tasks:
       - name: conf repo for kubectl
         yum_repository:
@@ -67,6 +69,7 @@
 
   name: Play 3
   hosts: tag_Name_k8s_minikube #replace with your host
+  remote_user: root
   tasks:
       - name: Deploy Scraper-app
         community.kubernetes.k8s:
